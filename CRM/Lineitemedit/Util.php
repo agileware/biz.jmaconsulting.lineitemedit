@@ -485,6 +485,15 @@ ORDER BY  ps.id, pf.weight ;
         $skip = TRUE;
       }
 
+      if ($skip != TRUE && $contributionStatusVal != "Completed") {
+        $adjustType = "payment";
+        if ($contributionStatusVal == "Pending refund") {
+          $adjustType = "refund";
+        }
+        $actionURL = CRM_Utils_System::url('civicrm/payment', 'action=add&reset=1&component=contribution&id=95&cid=202');
+        CRM_Core_Session::setStatus(ts('Line item edit has changed the contribution status to ' . $contributionStatusVal . ', <a href="%1">Record ' . $adjustType . '</a>  if required.', array(1 => $actionURL)), ts('Successfully Edited'), 'success', array('expires' => 0));
+      }
+
       // update contribution status and total amount without trigger financial code
       // as this is handled in current BAO function used for change selection
       $contriParams = ['id' => $contributionId];
